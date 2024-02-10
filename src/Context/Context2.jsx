@@ -14,6 +14,8 @@ export const DataProvider = ({ children }) => {
     const [dataFetched, setDataFetched] = useState(false);
     const [merchantFetched, setMerchantFetched] = useState(false);
     const [pincodeFetched, setPincodeFetched] = useState(false);
+    const [lastFetchTimestamp, setLastFetchTimestamp] = useState(0);
+    const minIntervalBetweenRequests = 5000;
 
     useEffect(() => {
         if (!data) {
@@ -25,9 +27,15 @@ export const DataProvider = ({ children }) => {
         if (!dataFetched) {
             setLoading(true);
             try {
-                const response = await axios.get('https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com//take_sample_graph');
-                setData(response.data);
-                setDataFetched(true);
+                const currentTime = Date.now();
+                if (currentTime - lastFetchTimestamp >= minIntervalBetweenRequests) {
+                    const response = await axios.get('https://calm-bliss-413606.as.r.appspot.com//take_sample_graph');
+                    setData(response.data);
+                    setDataFetched(true);
+                    setLastFetchTimestamp(currentTime);
+                } else {
+                    console.log("Too many requests. Please wait before making another request.");
+                }
             } catch (error) {
                 setError(error);
             } finally {
@@ -39,10 +47,16 @@ export const DataProvider = ({ children }) => {
     const fetchDataByPincode = async (pincodeValue) => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com/search/?pincode=${pincodeValue}`);
+            const currentTime = Date.now();
+            if (currentTime - lastFetchTimestamp >= minIntervalBetweenRequests) {
+                const response = await axios.get(`https://calm-bliss-413606.as.r.appspot.com/search/?pincode=${pincodeValue}`);
                 setPincode(pincodeValue);
                 setMerchant(response.data);
                 setPincodeFetched(true);
+                setLastFetchTimestamp(currentTime);
+            } else {
+                console.log("Too many requests. Please wait before making another request.");
+            }
         } catch (err) {
             setError(err);
             setMerchant("0"); 
@@ -56,10 +70,16 @@ export const DataProvider = ({ children }) => {
     const fetchDataByMerchant = async (merchantValue) => {
         setLoading(true);
         try {
-            const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com/search/?merchant_id=${merchantValue}`);
-            setMerchant(merchantValue);
-            setPincode(response.data);
-            setMerchantFetched(true);
+            const currentTime = Date.now();
+            if (currentTime - lastFetchTimestamp >= minIntervalBetweenRequests) {
+                const response = await axios.get(`https://calm-bliss-413606.as.r.appspot.com/search/?merchant_id=${merchantValue}`);
+                setMerchant(merchantValue);
+                setPincode(response.data);
+                setMerchantFetched(true);
+                setLastFetchTimestamp(currentTime);
+            } else {
+                console.log("Too many requests. Please wait before making another request.");
+            }
         } catch (err) {
             setError(err);
             setMerchant("0");

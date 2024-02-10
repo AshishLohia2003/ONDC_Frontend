@@ -5,8 +5,12 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import logo from "./../assets/logo.png";
 import {  toast } from 'react-toastify';
+import { useTheme } from '@emotion/react';
+import { tokens } from '../theme';
 
 function Home({ }) {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
     const fileInputRef = useRef(null);
     const [uploadedFileURL, setUploadedFileURL] = useState(null);
     const [error, setError] = useState();
@@ -115,8 +119,10 @@ function Home({ }) {
                         Go with the Mock file
                     </Button>
                 </Link>
-                {uploadedFileURL && <img src={uploadedFileURL} alt="Uploaded content" />}
             </Box>
+            <Typography textAlign="center" variant="h3" color={colors.text[500]}>
+                Bigger dataset will take more time for uploading and processing.
+            </Typography>
         </Box>
 
     );
