@@ -25,7 +25,7 @@ export const DataProvider = ({ children }) => {
         if (!dataFetched) {
             setLoading(true);
             try {
-                const response = await axios.get('https://calm-bliss-413606.as.r.appspot.com/take_sample_graph');
+                const response = await axios.get('https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com//take_sample_graph');
                 setData(response.data);
                 setDataFetched(true);
             } catch (error) {
@@ -37,34 +37,36 @@ export const DataProvider = ({ children }) => {
     };
 
     const fetchDataByPincode = async (pincodeValue) => {
-        if (!pincodeFetched || pincode !== pincodeValue) {
-            setLoading(true);
-            try {
-                const response = await axios.get(`https://calm-bliss-413606.as.r.appspot.com/search/?pincode=${pincodeValue}`);
+        setLoading(true);
+        try {
+            const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com/search/?pincode=${pincodeValue}`);
                 setPincode(pincodeValue);
                 setMerchant(response.data);
                 setPincodeFetched(true);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
+        } catch (err) {
+            setError(err);
+            setMerchant("0"); 
+            setPincode("0");
+            setPincodeFetched(false);
+        } finally {
+            setLoading(false);
         }
     };
 
     const fetchDataByMerchant = async (merchantValue) => {
-        if (!merchantFetched || merchant !== merchantValue) {
-            setLoading(true);
-            try {
-                const response = await axios.get(`https://calm-bliss-413606.as.r.appspot.com/search/?merchant_id=${merchantValue}`);
-                setMerchant(merchantValue);
-                setPincode(response.data);
-                setMerchantFetched(true);
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
+        setLoading(true);
+        try {
+            const response = await axios.get(`https://cors-anywhere.herokuapp.com/https://calm-bliss-413606.as.r.appspot.com/search/?merchant_id=${merchantValue}`);
+            setMerchant(merchantValue);
+            setPincode(response.data);
+            setMerchantFetched(true);
+        } catch (err) {
+            setError(err);
+            setMerchant("0");
+            setPincode("0");
+            setMerchantFetched(false);
+        } finally {
+            setLoading(false);
         }
     };
 

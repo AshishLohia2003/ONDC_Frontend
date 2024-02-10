@@ -112,7 +112,7 @@ function Home({ }) {
                         color="secondary"
                         variant="contained"
                     >
-                        Go with the Mock file.
+                        Go with the Mock file
                     </Button>
                 </Link>
                 {uploadedFileURL && <img src={uploadedFileURL} alt="Uploaded content" />}
